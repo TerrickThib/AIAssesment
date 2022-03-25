@@ -9,6 +9,7 @@
 #include "StateMachineComponent.h"
 #include "WanderComponent.h"
 #include "AABBCollider.h"
+#include "SeekComponent.h"
 
 Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* maze)
 	: Agent(x, y, "Ghost", maxSpeed, maxForce)

@@ -4,6 +4,7 @@
 class Maze;
 class PathfindComponent;
 class StateMachineComponent;
+class SeekComponent;
 
 class Ghost : public Agent
 {
@@ -33,7 +34,6 @@ private:
 	PathfindComponent* m_pathfindComponent;
 	Maze* m_maze;
 	StateMachineComponent* m_stateMachine;
-
 	Actor* m_target = nullptr;
 };
 

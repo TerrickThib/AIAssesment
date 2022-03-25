@@ -14,8 +14,9 @@ void StateMachineComponent::start()
 	Component::start();
 	m_wanderComponent = getOwner()->getComponent<WanderComponent>();
 	m_wanderForce = m_wanderComponent->getSteeringForce();
+
 	m_pathfindComponent = getOwner()->getComponent<PathfindComponent>();
-	
+	m_pathfindComponent->setEnabled(false);
 	m_currentState = IDLE;//Declares the State at the start of the programe
 }
 

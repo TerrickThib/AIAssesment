@@ -10,6 +10,7 @@ enum State
 
 class WanderComponent;
 class PathfindComponent;
+class SeekComponent;
 
 class StateMachineComponent : 
 	public Component
@@ -26,8 +27,9 @@ private:
 	State m_currentState;
 	WanderComponent* m_wanderComponent;
 	PathfindComponent* m_pathfindComponent;
-
+	SeekComponent* m_seekComponent;
 	float m_wanderForce;
 	float m_seekRange = 300;
+	float m_seekForce;
 };
 

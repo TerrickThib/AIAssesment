@@ -81,7 +81,7 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 		{
 			NodeGraph::Node* targetNode = openList[0]->edges[i].target;
 			
-			if (!closedList.contains(targetNode) && !openList.contains(targetNode))//WHile neither list have the goal
+			if (!openList.contains(targetNode) && !closedList.contains(targetNode))//WHile neither list have the goal
 			{
 				targetNode->gScore = openList[0]->gScore + openList[0]->edges[i].cost;//Add gscore for the cost to the edges
 				targetNode->hScore = manhattanDistance(m_currentNode, goal);//gets h score using manhattanDistance
@@ -93,7 +93,6 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 		}
 		closedList.addItem(openList[0]);
 		openList.remove(openList[0]);
-
 	}
 
 }
