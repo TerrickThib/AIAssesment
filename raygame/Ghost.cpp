@@ -6,6 +6,8 @@
 #include "PathfindComponent.h"
 #include "MoveComponent.h"
 #include "SpriteComponent.h"
+#include "StateMachineComponent.h"
+#include "WanderComponent.h"
 
 Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* maze)
 	: Agent(x, y, "Ghost", maxSpeed, maxForce)
@@ -13,10 +15,19 @@ Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* 
 	m_maze = maze;
 	getTransform()->setScale({ Maze::TILE_SIZE,Maze::TILE_SIZE });
 
-	/*m_pathfindComponent = new PathfindComponent(maze);
+	//Added pathfindComponent
+	m_pathfindComponent = new PathfindComponent(maze);
 	m_pathfindComponent->setColor(color);
-	addComponent(m_pathfindComponent);*/
+	addComponent(m_pathfindComponent);
+	
 	addComponent(new SpriteComponent("Images/enemy.png"));
+	//Added WanderComponent
+	WanderComponent* m_wanderComponent = new WanderComponent(100, 50, 100);
+	addComponent(m_wanderComponent);
+
+	//Added the State Machine
+	m_stateMachine = new StateMachineComponent();
+	addComponent(m_stateMachine);
 }
 
 Ghost::~Ghost()
