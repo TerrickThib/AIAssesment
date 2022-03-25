@@ -8,6 +8,7 @@
 #include "SpriteComponent.h"
 #include "StateMachineComponent.h"
 #include "WanderComponent.h"
+#include "AABBCollider.h"
 
 Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* maze)
 	: Agent(x, y, "Ghost", maxSpeed, maxForce)
@@ -28,6 +29,7 @@ Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* 
 	//Added the State Machine
 	m_stateMachine = new StateMachineComponent();
 	addComponent(m_stateMachine);
+	setCollider(new AABBCollider(Maze::TILE_SIZE, Maze::TILE_SIZE, this));
 }
 
 Ghost::~Ghost()
