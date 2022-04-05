@@ -42,59 +42,64 @@ void sortFScore(DynamicArray<NodeGraph::Node*>& nodes)
 	}
 }
 
-void sortGScore(DynamicArray<NodeGraph::Node*>& nodes)
-{
-	NodeGraph::Node* key = nullptr;
-	int j = 0;
-
-	for (int i = 1; i < nodes.getLength(); i++) {
-		key = nodes[i];
-		j = i - 1;
-		while (j >= 0 && nodes[j]->gScore > key->gScore) {
-			nodes[j + 1] = nodes[j];
-			j--;
-		}
-
-		nodes[j + 1] = key;
-	}
-}
-
 DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 {
+	//Makes all the scoes 0
 	resetGraphScore(start);
-	//Insert algorithm here
+	float hScore, gScore = 0;
+	NodeGraph::Node* m_currentNode;
+
 	DynamicArray<Node*> openList = DynamicArray<Node*>();
 	DynamicArray<Node*> closedList = DynamicArray<Node*>();
 	
 	openList.addItem(start);
-	while (openList.getLength() > 0)
+	m_currentNode = start;
+	while (openList.getLength() != 0)
 	{
 		sortFScore(openList);
 
-		NodeGraph::Node* m_currentNode = openList[0];
+		m_currentNode = openList[0];
 		if (m_currentNode == goal)
 		{
-			return reconstructPath(start, goal);
+			return reconstructPath(start, m_currentNode);
 		}
 
-		for (int i = 0; i < openList[0]->edges.getLength(); i++)
+		openList.remove(m_currentNode);
+		closedList.addItem(m_currentNode);
+
+		for (int i = 0; i < m_currentNode->edges.getLength(); i++)
 		{
-			NodeGraph::Node* targetNode = openList[0]->edges[i].target;
+			if (m_currentNode->walkable == false)
+				continue;
 			
-			if (!openList.contains(targetNode) && !closedList.contains(targetNode))//WHile neither list have the goal
+			if (!closedList.contains(m_currentNode->edges[i].target))//WHile neither list have the goal
 			{
-				targetNode->gScore = openList[0]->gScore + openList[0]->edges[i].cost;//Add gscore for the cost to the edges
-				targetNode->hScore = manhattanDistance(m_currentNode, goal);//gets h score using manhattanDistance
-				targetNode->fScore = targetNode->gScore + targetNode->hScore;//gets f score by using g + h score
-				targetNode->previous = openList[0]; 
-				openList.addItem(targetNode);//Adds item to open list
-				targetNode->color = 0xFF0000FF;
+				gScore = m_currentNode->edges[i].cost + m_currentNode->gScore;//Makes the gscore equal to the current nodes gscore and current cost
+				hScore = manhattanDistance(m_currentNode->edges[i].target, goal);
+			}
+			else
+				continue;
+			
+			if (m_currentNode->edges[i].target->fScore > (gScore + hScore))
+			{
+				m_currentNode->edges[i].target->gScore = gScore;//Sets the current nodes gscore to be the curent nodes edges gscore
+				m_currentNode->edges[i].target->hScore = hScore;//Sets the current nodes hscore to be the current nodes edges hscore
+				m_currentNode->edges[i].target->fScore = gScore + hScore;//Sets the curent nodes fScore to be the gscore plus the hscore
+				m_currentNode->edges[i].target->previous = m_currentNode;//Sets the current nodes targets previous to be current node
+			}
+
+			if (!openList.contains(m_currentNode->edges[i].target))
+			{
+				openList.addItem(m_currentNode->edges[i].target);
+				m_currentNode->edges[i].target->gScore = gScore;//Sets the current nodes gscore to be the curent nodes edges gscore
+				m_currentNode->edges[i].target->hScore = hScore;//Sets the current nodes hscore to be the current nodes edges hscore
+				m_currentNode->edges[i].target->fScore = gScore + hScore;//Sets the curent nodes fScore to be the gscore plus the hscore
+				m_currentNode->edges[i].target->previous = m_currentNode;//Sets the current nodes targets previous to be current node
 			}
 		}
-		closedList.addItem(openList[0]);
-		openList.remove(openList[0]);
+		
 	}
-
+	return reconstructPath(start, goal);
 }
 
 void NodeGraph::drawGraph(Node* start)
